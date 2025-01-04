@@ -80,6 +80,8 @@ post_install() {
         export DISPLAY=:0;
         export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u "$user")/bus;
         gsettings set org.gnome.desktop.interface cursor-theme 'Nordic-cursors';
+        gsettings set org.gnome.desktop.interface icon-theme 'Adwaita';
+        sleep 2;
         gsettings set org.gnome.desktop.interface icon-theme 'Dracula-Icons';
         gsettings set org.gnome.shell.extensions.user-theme name 'Dracula-Theme';
         gsettings set org.gnome.desktop.interface gtk-theme 'Dracula-Theme';
