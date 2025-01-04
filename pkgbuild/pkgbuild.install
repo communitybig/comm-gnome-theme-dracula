@@ -29,7 +29,7 @@ post_install() {
     echo "Backing up current GNOME settings to $backup_file..."
     su - "$user" -c "
         export DISPLAY=:0;
-        export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u "$user")/bus;
+        export DBUS_SESSION_BUS_ADDRESS=\$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/\$(pgrep -u \"$user\" gnome-session)/environ | cut -d= -f2-);
         {
             echo org.gnome.desktop.interface cursor-theme \$(gsettings get org.gnome.desktop.interface cursor-theme);
             echo org.gnome.desktop.interface icon-theme \$(gsettings get org.gnome.desktop.interface icon-theme);
@@ -78,7 +78,7 @@ post_install() {
     echo "Applying GNOME settings for user $user..."
     su - "$user" -c "
         export DISPLAY=:0;
-        export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u "$user")/bus;
+        export DBUS_SESSION_BUS_ADDRESS=\$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/\$(pgrep -u \"$user\" gnome-session)/environ | cut -d= -f2-);
         gsettings set org.gnome.desktop.interface cursor-theme 'Nordic-cursors';
         gsettings set org.gnome.desktop.interface icon-theme 'Dracula-Icons';
         gsettings set org.gnome.shell.extensions.user-theme name 'Dracula-Theme';
@@ -91,7 +91,7 @@ post_install() {
     echo "Verifying GNOME settings..."
     su - "$user" -c "
         export DISPLAY=:0;
-        export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u "$user")/bus;
+        export DBUS_SESSION_BUS_ADDRESS=\$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/\$(pgrep -u \"$user\" gnome-session)/environ | cut -d= -f2-);
         echo 'Cursor Theme:' \$(gsettings get org.gnome.desktop.interface cursor-theme);
         echo 'Icon Theme:' \$(gsettings get org.gnome.desktop.interface icon-theme);
     "
@@ -142,7 +142,7 @@ post_remove() {
 
             su - "$user" -c "
                 export DISPLAY=:0;
-                export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u "$user")/bus;
+                export DBUS_SESSION_BUS_ADDRESS=\$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/\$(pgrep -u \"$user\" gnome-session)/environ | cut -d= -f2-);
                 gsettings set $schema $key $value
             "
         done < "$backup_file"
